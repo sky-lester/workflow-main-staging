@@ -1,0 +1,29 @@
+name: Deploy To Main branch (Live Server)
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: [self-hosted, pull-to-server-live]
+    steps:
+      - name: Update main branch
+        run: |
+          cd /workdir/
+          git checkout main
+          git pull origin main
+          echo "Main server updated from remote"
+  update-staging:
+    runs-on: [self-hosted, pull-to-server-staging]
+    steps:
+      - name: Update staging branch
+        run: |
+          cd /workdir/
+          git checkout main
+          git pull origin main
+          git checkout staging
+          git reset --hard main
+          git push origin staging --force
+          echo "Staging remote updated"
+          git checkout main
+          echo "Now in main"
